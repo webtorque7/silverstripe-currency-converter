@@ -14,7 +14,7 @@
  */
 abstract class CurrencyConverter extends Object
 {
-	private static $converter = 'EuropaXMLCurrencyConverter';
+	public static $converter = 'EuropaXMLCurrencyConverter';
 	private $cache = null;
 
 	protected $currencies = array();

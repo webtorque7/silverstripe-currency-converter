@@ -9,8 +9,8 @@ use Guzzle\Http\Message\Request;
 
 class EuropaXMLCurrencyConverter extends CurrencyConverter
 {
-	private static $base_url = 'http://www.ecb.europa.eu';
-	private static $path = '/stats/eurofxref/eurofxref-daily.xml';
+	public static $base_url = 'http://www.ecb.europa.eu';
+	public static $path = '/stats/eurofxref/eurofxref-daily.xml';
 
 	public function retrieveCurrencies() {
 		$client = new Guzzle\Http\Client($this->config()->base_url);
