@@ -5,7 +5,6 @@ php:
 
 env:
   - DB=MYSQL CORE_RELEASE=3.1
-  - DB=MYSQL CORE_RELEASE=master
 
 before_script:
   - phpenv rehash
@@ -15,3 +14,7 @@ before_script:
 
 script:
   - phpunit currency-converter/tests
+
+notifications:
+  email:
+    - developers@webtorque.co.nz
