@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/webtorque7/silverstripe-currency-converter.svg?branch=master)](https://travis-ci.org/webtorque7/silverstripe-currency-converter)
+
 #SilverStripe Currency Converter
 
 Simple service for converting currencies. 0.1.* is for SilverStripe 3.0.*
