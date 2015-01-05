@@ -25,7 +25,7 @@ abstract class CurrencyConverter extends Object
 	 */
 	public static function get_converter($converter = '') {
 		if (!$converter) {
-			$converter = self::config()->converter;
+			$converter = Config::inst()->get('CurrencyConverter', 'converter');
 		}
 
 		return Injector::inst()->create($converter);
