@@ -6,9 +6,13 @@ Simple service for converting currencies. 0.1.* is for SilverStripe 3.0.*
 
 ## Installation
 
-Install the module into a `currency-converter\` folder inside the webroot.
+Install the module into `currency-converter\` folder inside the webroot.
 
-With composer - composer require webtorque7/inpage-modules
+With composer
+
+```
+composer require webtorque/currency-converter
+```
 
 ## Usage
 
