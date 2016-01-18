@@ -12,43 +12,45 @@
  * @package cms
  * @subpackage tests
  */
-class CurrencyConverterTest extends FunctionalTest {
+class CurrencyConverterTest extends FunctionalTest
+{
 
-	//protected static $fixture_file = 'SiteTreeActionsTest.yml';
+    //protected static $fixture_file = 'SiteTreeActionsTest.yml';
 
-	public function testCurrencyLoading() {
+    public function testCurrencyLoading()
+    {
+        $converter = CurrencyConverter::get_converter();
 
-		$converter = CurrencyConverter::get_converter();
+        $rate = $converter->rateForCurrency('NZD');
 
-		$rate = $converter->rateForCurrency('NZD');
+        $this->assertNotNull($rate);
+    }
 
-		$this->assertNotNull($rate);
-	}
+    public function testCurrencyConversion()
+    {
+        $converter = CurrencyConverter::get_converter();
 
-	public function testCurrencyConversion() {
-		$converter = CurrencyConverter::get_converter();
+        $converter->setCurrencies(array(
+            'NZD' => 2,
+            'USD' => 5
+        ));
 
-		$converter->setCurrencies(array(
-			'NZD' => 2,
-			'USD' => 5
-		));
+        $convertedAmount = $converter->convert(1, 'NZD', 'USD');
 
-		$convertedAmount = $converter->convert(1, 'NZD', 'USD');
+        $this->assertEquals($convertedAmount, 2.5);
+    }
 
-		$this->assertEquals($convertedAmount, 2.5);
-	}
+    public function testNotSupported()
+    {
+        $this->setExpectedException('Exception');
 
-	public function testNotSupported() {
-		$this->setExpectedException('Exception');
+        $converter = CurrencyConverter::get_converter();
 
-		$converter = CurrencyConverter::get_converter();
+        $converter->setCurrencies(array(
+            'NZD' => 2,
+            'USD' => 5
+        ));
 
-		$converter->setCurrencies(array(
-			'NZD' => 2,
-			'USD' => 5
-		));
-
-		$converter->rateForCurrency('YEN');
-	}
+        $converter->rateForCurrency('YEN');
+    }
 }
-
