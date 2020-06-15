@@ -1,23 +1,27 @@
 {
-	"name": "webtorque/currency-converter",
-	"description": "Currency converter for SilverStripe CMS",
-	"type": "silverstripe-vendormodule",
-	"keywords": ["silverstripe", "currency", "conversion"],
-	"license": "MIT",
-	"require": {
-		"php": ">=5.6.40",
+    "name": "webtorque/currency-converter",
+    "description": "Currency converter for SilverStripe CMS",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "currency",
+        "conversion"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.6.40",
         "ext-simplexml": "*",
-		"silverstripe/framework": "^4",
+        "silverstripe/framework": "^4",
         "guzzlehttp/guzzle": "~6.0"
-	},
-	"authors": [
-		{
-			"name": "Conrad Dobbs",
-			"email": "conrad@webtorque.co.nz"
-		},
+    },
+    "authors": [
+        {
+            "name": "Conrad Dobbs",
+            "email": "conrad@webtorque.co.nz"
+        },
         {
             "name": "Reece Alexander",
             "email": "reece.alexander@gmail.com"
         }
-	]
+    ]
 }
