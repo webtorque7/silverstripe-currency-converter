@@ -1,4 +1,9 @@
 <?php
+
+namespace Zanderwar\CurrencyConverter\Tests;
+
+use Zanderwar\CurrencyConverter\CurrencyConverter;
+
 /**
  * Possible actions:
  * - action_save
@@ -12,14 +17,11 @@
  * @package cms
  * @subpackage tests
  */
-class CurrencyConverterTest extends FunctionalTest
+class CurrencyConverterTest extends \SilverStripe\Dev\FunctionalTest
 {
-
-    //protected static $fixture_file = 'SiteTreeActionsTest.yml';
-
     public function testCurrencyLoading()
     {
-        $converter = CurrencyConverter::get_converter();
+        $converter = \Zanderwar\CurrencyConverter\CurrencyConverter::getConverter();
 
         $rate = $converter->rateForCurrency('NZD');
 
@@ -28,7 +30,7 @@ class CurrencyConverterTest extends FunctionalTest
 
     public function testCurrencyConversion()
     {
-        $converter = CurrencyConverter::get_converter();
+        $converter = CurrencyConverter::getConverter();
 
         $converter->setCurrencies(array(
             'NZD' => 2,
@@ -42,9 +44,9 @@ class CurrencyConverterTest extends FunctionalTest
 
     public function testNotSupported()
     {
-        $this->setExpectedException('Exception');
+        $this->expectException('\Exception');
 
-        $converter = CurrencyConverter::get_converter();
+        $converter = CurrencyConverter::getConverter();
 
         $converter->setCurrencies(array(
             'NZD' => 2,

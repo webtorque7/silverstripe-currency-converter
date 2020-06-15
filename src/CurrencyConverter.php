@@ -1,5 +1,15 @@
 <?php
 
+namespace WebTorque\CurrencyConverter;
+
+use Exception;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBCurrency;
+
 /**
  * Base class for Currency Converter
  *
@@ -12,21 +22,24 @@
  *  'USD' => '1.2'
  * );
  */
-abstract class CurrencyConverter extends Object
+class CurrencyConverter
 {
-    private static $converter = 'EuropaXMLCurrencyConverter';
+    use Configurable, Injectable;
+
+    private static $converter = EuropaXMLCurrencyConverter::class;
+
     private $cache = null;
 
-    protected $currencies = array();
+    protected $currencies = [];
 
     /**
      * @param string $converter
      * @return CurrencyConverter
      */
-    public static function get_converter($converter = '')
+    public static function getConverter($converter = '')
     {
         if (!$converter) {
-            $converter = self::config()->converter;
+            $converter = static::config()->get('converter');
         }
 
         return Injector::inst()->create($converter);
@@ -43,12 +56,12 @@ abstract class CurrencyConverter extends Object
     }
 
     /**
-     * @return Zend_Cache_Frontend
+     * @return CacheInterface
      */
     public function getCache()
     {
         if (!$this->cache) {
-            $this->cache = SS_Cache::factory('CurrencyConverter');
+            $this->cache = Injector::inst()->get(CacheInterface::class . '.CurrencyConverterFactory');
         }
 
         return $this->cache;
@@ -58,10 +71,11 @@ abstract class CurrencyConverter extends Object
      * Load currencies from Cache
      *
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function loadFromCache()
     {
-        return ($cached = $this->getCache()->load($this->getCacheKey()))
+        return ($cached = $this->getCache()->get($this->getCacheKey()))
             ? unserialize($cached)
             : null;
     }
@@ -71,15 +85,18 @@ abstract class CurrencyConverter extends Object
      *
      * @param $currencies
      * @return mixed
+     * @throws InvalidArgumentException
      */
     public function saveToCache($currencies)
     {
-        return $this->getCache()->save(serialize($currencies), $this->getCacheKey());
+        $currencies = serialize($currencies);
+
+        return $this->getCache()->set($this->getCacheKey(), $currencies);
     }
 
     private function getCacheKey()
     {
-        return __CLASS__ . 'Currencies';
+        return basename(__CLASS__) . 'Currencies';
     }
 
     /**
@@ -88,7 +105,9 @@ abstract class CurrencyConverter extends Object
      * @param $value float Monetary value to convert
      * @param $base float Base currency the value is in
      * @param $new float Currency to convert value to
-     * @return float
+     * @return DBCurrency|\SilverStripe\ORM\FieldType\DBDecimal
+     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public function convert($value, $base, $new)
     {
@@ -100,7 +119,7 @@ abstract class CurrencyConverter extends Object
         $conversionRate = $this->getExchangeRate($base, $new);
 
         //do conversion
-        return $value * $conversionRate;
+        return DBCurrency::create()->setValue($value * $conversionRate);
     }
 
     /**
@@ -109,6 +128,8 @@ abstract class CurrencyConverter extends Object
      * @param $base float Base currency to convert from
      * @param $new float Currency to convert to
      * @return float
+     * @throws Exception
+     * @throws InvalidArgumentException
      */
     public function getExchangeRate($base, $new)
     {
@@ -119,11 +140,14 @@ abstract class CurrencyConverter extends Object
 
     /**
      * Load currencies, checks cache first, otherwise calls retreiveCurrencies
+     *
+     * @param bool $force
+     * @throws InvalidArgumentException
      */
     public function loadCurrencies($force = false)
     {
         if ($force || !($currencies = $this->loadFromCache())) {
-            $currencies = $this->retrieveCurrencies();
+            $currencies = static::getConverter()->retrieveCurrencies();
             $this->saveToCache($currencies);
         }
 
@@ -136,18 +160,20 @@ abstract class CurrencyConverter extends Object
      * @param $currency string Currency code to look up
      * @return float
      * @throws Exception
+     * @throws InvalidArgumentException
      */
     public function rateForCurrency($currency)
     {
-        if ($currency === $this->getBaseCurrency()) {
+        if ($currency === static::getConverter()->getBaseCurrency()) {
             return 1;
         }
 
         if (empty($this->currencies)) {
             $this->loadCurrencies();
         };
+
         if (!$this->currencies[$currency]) {
-            throw new Exception("Currency {$currency} not supported");
+            throw new \Exception("Currency {$currency} not supported");
         }
 
         return $this->currencies[$currency];
@@ -158,12 +184,18 @@ abstract class CurrencyConverter extends Object
      *
      * @return mixed
      */
-    abstract public function retrieveCurrencies();
+    public function retrieveCurrencies()
+    {
+        throw new \RuntimeException('You must override this method in a converter');
+    }
 
     /**
      * The base currency for the returned currencies
      *
      * @return string
      */
-    abstract public function getBaseCurrency();
+    public function getBaseCurrency()
+    {
+        throw new \RuntimeException('You must override this method in a converter');
+    }
 }
