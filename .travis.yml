@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 5.3
+  - 7.3.1
 
 env:
   - DB=MYSQL CORE_RELEASE=3.1

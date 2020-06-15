@@ -1,14 +1,13 @@
-[![Build Status](https://secure.travis-ci.org/webtorque7/silverstripe-currency-converter.svg?branch=master)](https://travis-ci.org/webtorque7/silverstripe-currency-converter)
-
 #SilverStripe Currency Converter
 
-Simple service for converting currencies. 0.1.* is for SilverStripe 3.0.*
+Simple service for converting currencies for SilverStripe 4+
+
+Full credits go to: [webtorque7](https://github.com/webtorque7/silverstripe-currency-converter). I've
+merely upgraded the module to be compatible with SilverStripe 4+ and made a few slight improvements.
 
 ## Installation
 
-Install the module into `currency-converter\` folder inside the webroot.
-
-With composer
+Composer
 
 ```
 composer require webtorque/currency-converter
@@ -16,10 +15,10 @@ composer require webtorque/currency-converter
 
 ## Usage
 
-To convert $9999 NZD to USD
+To convert $99.99 NZD to USD
 
 ```php
-$convertedAmount = CurrencyConverter::get_converter()->convert(9999, 'NZD', 'USD');
+$convertedAmount = CurrencyConverter::get_converter()->convert(99.99, 'NZD', 'USD');
 ```
 
 ## Exchange rates
@@ -30,12 +29,12 @@ created by inheriting from CurrencyConverter and implementing the retrieveCurren
 Then change the `converter` config option on CurrencyConverter e.g.
 
 ```yml
-CurrencyConverter:
+Zanderwar\CurrencyConverter\CurrencyConverter:
   converter: MyCurrencyConverter
 ```
 
 Alternatively, you can pass the name of the class into get_converter e.g.
 
 ```php
-$convertedAmount = CurrencyConverter::get_converter('MyCurrencyConverter')->convert(9999, 'NZD', 'USD');
+$convertedAmount = CurrencyConverter::getConverter(MyCurrencyConverter::class)->convert(9999, 'NZD', 'USD');
 ```
