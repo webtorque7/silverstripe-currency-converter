@@ -15,7 +15,7 @@ composer require webtorque/currency-converter
 To convert $99.99 NZD to USD
 
 ```php
-$convertedAmount = CurrencyConverter::get_converter()->convert(99.99, 'NZD', 'USD');
+$convertedAmount = CurrencyConverter::getConverter()->convert(99.99, 'NZD', 'USD');
 ```
 
 ## Exchange rates
@@ -26,7 +26,7 @@ created by inheriting from CurrencyConverter and implementing the retrieveCurren
 Then change the `converter` config option on CurrencyConverter e.g.
 
 ```yml
-Zanderwar\CurrencyConverter\CurrencyConverter:
+WebTorque\CurrencyConverter\CurrencyConverter:
   converter: MyCurrencyConverter
 ```
 
