@@ -2,9 +2,6 @@
 
 Simple service for converting currencies for SilverStripe 4+
 
-Full credits go to: [webtorque7](https://github.com/webtorque7/silverstripe-currency-converter). I've
-merely upgraded the module to be compatible with SilverStripe 4+ and made a few slight improvements.
-
 ## Installation
 
 Composer
